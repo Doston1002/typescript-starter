@@ -31,6 +31,38 @@
 $ npm install
 ```
 
+## Telegram bot setup
+
+Set `TELEGRAM_BOT_TOKEN` to the student bot token and `ADMIN_BOT_TOKEN` to the
+separate admin bot token in the root `.env` file (see `.env.example`), then
+start the app. Both bots are polled by this same app process. The student bot
+guides users through language, name, gender, region, district, age, and grade
+selection in Uzbek or Russian.
+Set comma-separated Telegram chat IDs in `ADMIN_CHAT_IDS` to allow administrators
+to choose a grade with `/start` and receive its completed survey responses as
+an `.xlsx` workbook. Responses are collected after students complete a survey;
+incomplete surveys are not exported. If a class has no responses yet, the
+workbook still includes that class's Uzbek and Russian questionnaire templates.
+Completed survey responses are saved to `SURVEY_RESPONSES_FILE` (default
+`data/survey-responses.json`) so they remain available after app restarts. Keep
+that data file on persistent storage and do not commit it; it contains student
+personal information.
+Sixth-grade students are then asked the 15-question career-interest survey,
+seventh-grade students the 20-question A/B/C survey, and eighth- and
+ninth-grade students their respective yes/no surveys (45 and 50 questions), in
+their selected language. After registration, `/start` shows the saved-language
+grade choices and skips the personal-information questions. Profiles and survey
+profiles and in-progress answers are held in memory and are cleared when the app
+restarts. After registration, `/start` shows the saved-language grade choices
+and skips the personal-information questions.
+
+```env
+TELEGRAM_BOT_TOKEN=student_bot_token
+ADMIN_BOT_TOKEN=admin_bot_token
+ADMIN_CHAT_IDS=749309408,5531717864
+SURVEY_RESPONSES_FILE=data/survey-responses.json
+```
+
 ## Compile and run the project
 
 ```bash
@@ -70,21 +102,6 @@ $ mau deploy
 
 With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
 
-## Observability
-
-In production applications, observability is essential for understanding how your system behaves, detecting issues early, and maintaining reliable performance.
-
-[NestJS Observe](https://observe.nestjs.com) automatically instruments your NestJS application, giving you deep visibility into your system with minimal setup:
-
-- **Distributed tracing:** Follow requests across services and understand how they flow through your system.
-- **Waterfall analysis:** Visualize request execution and identify slow operations, bottlenecks, and unexpected delays.
-- **Performance analysis:** Analyze application performance in real time and quickly pinpoint areas that need optimization.
-- **Metrics:** Track key application and infrastructure metrics to understand system health and performance trends.
-- **Logging:** Centralize and correlate logs with traces and other telemetry to make debugging easier.
-- **Error tracking:** Detect errors quickly and investigate their root causes with the surrounding context.
-- **SLA monitoring:** Track service-level objectives and identify when your application is approaching or exceeding defined thresholds.
-- **Alarms and alerts:** Set up alerts for critical errors, performance degradation, SLA violations, and other anomalies so your team can react quickly.
-
 ## Resources
 
 Check out a few resources that may come in handy when working with NestJS:
@@ -93,7 +110,6 @@ Check out a few resources that may come in handy when working with NestJS:
 - For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
 - To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
 - Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Auto-instrument your application with [NestJS Observe](https://observe.nestjs.com). Distributed tracing, metrics, and logging made easy. Error tracking and performance monitoring for your NestJS applications.
 - Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
 - Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
 - To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
